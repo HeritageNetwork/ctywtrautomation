@@ -21,7 +21,7 @@ require(dplyr)
 #load the arcgis license
 arc.check_product()
 
-# update refresh name ***add cty or wtr to names?
+# update refresh name 
 updateName <- "_refresh202301"
 updateNameprev <- "_refresh202207"
 
@@ -31,10 +31,8 @@ ifelse(!dir.exists(here::here("_data","output",updateName)), dir.create(here::he
 # rdata file 
 updateData <- here::here("_data","output",updateName,paste(updateName, "RData", sep="."))
 
-# output database name ***change name and rerun script
-# for cty and wtr or add additional steps to create both
-# with one run of the script??
-databasename <- here::here("_data","output",updateName,"cty_test.sqlite")
+# output database name
+Cty_databasename <- here::here("_data","output",updateName,"test.sqlite")
 
 # cutoff and exclusions for records ***Also not needed
 # this refresh? Do the SQL Biotics scripts take care of this??
