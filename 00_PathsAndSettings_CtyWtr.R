@@ -31,7 +31,7 @@ ifelse(!dir.exists(here::here("_data","output",updateName)), dir.create(here::he
 updateData <- here::here("_data","output",updateName,paste(updateName, "RData", sep="."))
 
 # output database name
-Cty_databasename <- here::here("_data","output",updateName,"test.sqlite")
+databasename <- here::here("_data","output",updateName,"test.sqlite")
 
 # cutoff and exclusions for records ***Also not needed
 # this refresh? Do the SQL Biotics scripts take care of this??
