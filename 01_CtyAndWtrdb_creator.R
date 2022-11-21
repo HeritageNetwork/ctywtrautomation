@@ -24,17 +24,17 @@ dbDisconnect(db) # disconnect the db
 
 # Load tables
 county_table <- read.table(sourceCnty, header=TRUE, sep="\t")
-watershed_table <- read.table(sourceWater, header=TRUE, sep="\t")
-#***need to find raw naba data***
-#naba_table <- read.table("naba.csv", stringsAsFactors = FALSE)
+watershed_table <- read.table(sourceWater, header=TRUE, sep="\t", colClasses=c("HUC8_CD"="character"))
 
 # Write tables to sqlite db
 db <- dbConnect(SQLite(), dbname=databasename) # connect to db
-dbWriteTable(db, "county_table", county_table, overwrite = TRUE)
-dbWriteTable(db, "watershed_table", watershed_table, overwrite = TRUE)
-#dbWriteTable(db, "naba_table", naba_table, overwrite = TRUE)
+dbWriteTable(db, "county_table", county_table, overwrite=TRUE)
+dbWriteTable(db, "watershed_table", watershed_table, overwrite=TRUE)
 dbDisconnect(db) # disconnect the db
 
 ###########################
-#
+# add in NABA data?
 
+#***need to find raw naba data***
+#naba_table <- read.table("naba.csv", stringsAsFactors = FALSE)
+#dbWriteTable(db, "naba_table", naba_table, overwrite = TRUE)
