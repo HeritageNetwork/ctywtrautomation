@@ -4,8 +4,8 @@
 # Created: 2022-11-11
 #
 #---------------------------------------------------
-#clear the environments **Do we need this step?
-rm(list=ls())
+
+rm(list=ls()) # clean environments
 
 # Settings from Script 00
 if (!requireNamespace("here", quietly=TRUE)) install.packages("here")
@@ -17,8 +17,8 @@ source(here::here("00_PathsAndSettings_CtyWtr.r"))
 ifelse(!dir.exists(here::here("_data")), dir.create(here::here("_data")), FALSE)
 ifelse(!dir.exists(here::here("_data","output")), dir.create(here::here("_data","output")), FALSE)
 
+########################
 # Convert Biotics Exports to SQLite Databases
-# Create empty sqlite db
 db <- dbConnect(SQLite(), dbname=databasename) # creates an empty database
 dbDisconnect(db) # disconnect the db
 
@@ -35,5 +35,6 @@ dbWriteTable(db, "watershed_table", watershed_table, overwrite = TRUE)
 #dbWriteTable(db, "naba_table", naba_table, overwrite = TRUE)
 dbDisconnect(db) # disconnect the db
 
-
+###########################
+#
 
