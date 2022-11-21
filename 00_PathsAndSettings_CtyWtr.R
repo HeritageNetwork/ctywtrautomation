@@ -24,6 +24,11 @@ arc.check_product()
 # update refresh name 
 updateName <- "_refresh202301"
 
+# path to old files 
+sourceCnty <- "S:/Projects/BLD_Standard_Products/County_Watershed_Data/_REFRESH_202203/Data/Source/Script_exports/widget_egt_county_export_202203_v4.txt"
+sourceWater <- "S:/Projects/BLD_Standard_Products/County_Watershed_Data/_REFRESH_202203/Data/Source/Script_exports/widget_egt_watershed_202203_export_v4.txt"
+
+
 # create a directory for this update unless it already exists
 ifelse(!dir.exists(here::here("_data","output",updateName)), dir.create(here::here("_data","output",updateName)), FALSE)
 

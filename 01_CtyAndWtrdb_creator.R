@@ -23,8 +23,8 @@ db <- dbConnect(SQLite(), dbname=databasename) # creates an empty database
 dbDisconnect(db) # disconnect the db
 
 # Load tables
-county_table <- read.table("widget_egt_county_export_202203_v4.txt", header=TRUE, sep="\t")
-watershed_table <- read.table("widget_egt_watershed_202203_export_v4.txt", header=TRUE, sep="\t")
+county_table <- read.table(sourceCnty, header=TRUE, sep="\t")
+watershed_table <- read.table(sourceWater, header=TRUE, sep="\t")
 #***need to find raw naba data***
 #naba_table <- read.table("naba.csv", stringsAsFactors = FALSE)
 
