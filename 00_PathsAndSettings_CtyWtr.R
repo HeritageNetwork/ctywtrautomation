@@ -17,13 +17,19 @@ if (!requireNamespace("plyr", quietly = TRUE)) install.packages("plyr")
 require(plyr)
 if (!requireNamespace("dplyr", quietly=TRUE)) install.packages("dplyr")
 require(dplyr)
+if (!requireNamespace("RODBC", quietly=TRUE)) install.packages("RODBC")
+require(RODBC)
 
 #load the arcgis license
 arc.check_product()
 
 # update refresh name 
 updateName <- "_refresh202301"
-updateNameprev <- "_refresh202207"
+
+# path to old files 
+sourceCnty <- "S:/Projects/BLD_Standard_Products/County_Watershed_Data/_REFRESH_202203/Data/Source/Script_exports/widget_egt_county_export_202203_v4.txt"
+sourceWater <- "S:/Projects/BLD_Standard_Products/County_Watershed_Data/_REFRESH_202203/Data/Source/Script_exports/widget_egt_watershed_202203_export_v4.txt"
+
 
 # create a directory for this update unless it already exists
 ifelse(!dir.exists(here::here("_data","output",updateName)), dir.create(here::here("_data","output",updateName)), FALSE)
@@ -32,7 +38,7 @@ ifelse(!dir.exists(here::here("_data","output",updateName)), dir.create(here::he
 updateData <- here::here("_data","output",updateName,paste(updateName, "RData", sep="."))
 
 # output database name
-Cty_databasename <- here::here("_data","output",updateName,"test.sqlite")
+databasename <- here::here("_data","output",updateName,"test.sqlite")
 
 # cutoff and exclusions for records ***Also not needed
 # this refresh? Do the SQL Biotics scripts take care of this??
@@ -47,5 +53,3 @@ albersconic <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96
 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"
 
 # function to load species list ***Needed next refresh?
-
-# THIS IS A TEST CHANGE FROM CHRIS
