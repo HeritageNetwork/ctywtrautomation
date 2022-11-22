@@ -35,6 +35,20 @@ dbDisconnect(db) # disconnect the db
 ###########################
 # add in NABA data?
 
+
+
+
+## Set up driver info and database path
+DRIVERINFO <- "Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
+nabaPATH <- "X:/ZOOLOGY/NABA Deliverables (Jan2020)/Crayfish-Fish-MusselsSpeciesHUC_2020Jan05.accdb"
+channel <- odbcDriverConnect(paste0(DRIVERINFO, "DBQ=", nabaPATH))
+
+## Load data into R dataframe
+nabaTable <- sqlQuery(channel, "SELECT [EGT_ID], [G_NAME], [G_COMNAME] FROM [Species-HUC];",stringsAsFactors=FALSE)
+close(channel) ## Close and remove channel
+
+
+
 #***need to find raw naba data***
 #naba_table <- read.table("naba.csv", stringsAsFactors = FALSE)
 #dbWriteTable(db, "naba_table", naba_table, overwrite = TRUE)

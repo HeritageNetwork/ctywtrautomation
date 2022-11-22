@@ -17,6 +17,8 @@ if (!requireNamespace("plyr", quietly = TRUE)) install.packages("plyr")
 require(plyr)
 if (!requireNamespace("dplyr", quietly=TRUE)) install.packages("dplyr")
 require(dplyr)
+if (!requireNamespace("RODBC", quietly=TRUE)) install.packages("RODBC")
+require(RODBC)
 
 #load the arcgis license
 arc.check_product()
