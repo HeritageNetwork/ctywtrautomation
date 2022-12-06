@@ -13,8 +13,9 @@ require(here)
 #source(here::here("Automation_scripts", "00_PathsAndSettings_CtyWtr.r"))
 source(here::here("00_PathsAndSettings_CtyWtr.r"))
 
-# Make sure the output directories have been created:
+# Make sure the input and output directories have been created:
 ifelse(!dir.exists(here::here("_data")), dir.create(here::here("_data")), FALSE)
+ifelse(!dir.exists(here::here("_data","input")), dir.create(here::here("_data","input")), FALSE)
 ifelse(!dir.exists(here::here("_data","output")), dir.create(here::here("_data","output")), FALSE)
 
 ########################
@@ -45,6 +46,8 @@ close(channel) ## Close and remove channel
 
 ## Connect to central biotics to pull out most recent data on sss
 # con <- odbcConnect("bioticscentral.natureserve.org", uid="biotics_report", pwd=rstudioapi::askForPassword("Password"))
+
+NABA_EGT_attributes.sql
 
 
 nabaTableEGT <- read.csv("NABA_EGT_attributes_202206.txt", stringsAsFactors=FALSE)  ## TEMPORARY STEP TO GET AROUND BIOTICS. THis has all the columns created
