@@ -35,20 +35,37 @@ dbDisconnect(db) # disconnect the db
 ###########################
 # add in NABA data?
 
-
-
-
 ## Set up driver info and database path
 DRIVERINFO <- "Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
 nabaPATH <- "X:/ZOOLOGY/NABA Deliverables (Jan2020)/Crayfish-Fish-MusselsSpeciesHUC_2020Jan05.accdb"
 channel <- odbcDriverConnect(paste0(DRIVERINFO, "DBQ=", nabaPATH))
-
 ## Load data into R dataframe
-nabaTable <- sqlQuery(channel, "SELECT [EGT_ID], [G_NAME], [G_COMNAME] FROM [Species-HUC];",stringsAsFactors=FALSE)
+nabaTable <- sqlQuery(channel, "SELECT * FROM [Species-HUC];",stringsAsFactors=FALSE)
 close(channel) ## Close and remove channel
 
+## Connect to central biotics to pull out most recent data on sss
+# con <- odbcConnect("bioticscentral.natureserve.org", uid="biotics_report", pwd=rstudioapi::askForPassword("Password"))
 
 
-#***need to find raw naba data***
-#naba_table <- read.table("naba.csv", stringsAsFactors = FALSE)
-#dbWriteTable(db, "naba_table", naba_table, overwrite = TRUE)
+nabaTableEGT <- read.csv("NABA_EGT_attributes_202206.txt", stringsAsFactors=FALSE)  ## TEMPORARY STEP TO GET AROUND BIOTICS. THis has all the columns created
+
+nabatable2 <- merge(nabaTable, nabaTableEGT, by.x=c("EGT_ID","G_COMNAME"), by.y=c("ELEMENT_GLOBAL_ID","G_COMNAME"), all.x=TRUE)
+
+nabatable2a <- nabatable2[c(names(watershed_table))]
+
+# names(nabaTable)
+# names(nabaTableEGT)
+# names(watershed_table)
+
+names(nabatable2)[names(nabatable2) == "G_NAME"] <- "GNAME"
+names(watershed_table)[names(watershed_table) == "ELEMENT_GLOBAL_ID"] <- "EGT_ID"
+
+
+
+setdiff(names(nabatable2),names(watershed_table))
+setdiff(names(watershed_table),names(nabatable2))
+
+watershed_table_check <- watershed_table[c(names(nabaTableEGT))]
+
+combined_table <- rbind(watershed_table_check, nabaTableEGT)
+
