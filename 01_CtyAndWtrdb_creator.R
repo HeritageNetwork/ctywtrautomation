@@ -34,7 +34,7 @@ dbWriteTable(db, "watershed_table", watershed_table, overwrite=TRUE)
 dbDisconnect(db) # disconnect the db
 
 ###########################
-# add in NABA data?
+# add in NABA data
 
 ## Set up driver info and database path
 DRIVERINFO <- "Driver={Microsoft Access Driver (*.mdb, *.accdb)};"
@@ -46,11 +46,16 @@ close(channel) ## Close and remove channel
 
 ## Connect to central biotics to pull out most recent data on sss
 # con <- odbcConnect("bioticscentral.natureserve.org", uid="biotics_report", pwd=rstudioapi::askForPassword("Password"))
+# Stop here and copy the "_data/queries/NABA_EGT_attributes.sql" query into Biotics.  Save the 
 
-NABA_EGT_attributes.sql
+NABAegtid_file <- list.files(path=here::here("_data","input"), pattern=".csv$")  # --- make sure your excel file is not open.
+NABAegtid_file
+# look at the output,choose which csv you want to load, and enter its location in the list (first = 1, second = 2, etc)
+n <- 1
+NABAegtid_file <- here::here("_data","input", NABAegtid_file[n])
 
 
-nabaTableEGT <- read.csv("NABA_EGT_attributes_202206.txt", stringsAsFactors=FALSE)  ## TEMPORARY STEP TO GET AROUND BIOTICS. THis has all the columns created
+nabatableEGT <- read.csv(NABAegtid_file, stringsAsFactors=FALSE)  ## TEMPORARY STEP TO GET AROUND BIOTICS. THis has all the columns created
 
 nabatable2 <- merge(nabaTable, nabaTableEGT, by.x=c("EGT_ID","G_COMNAME"), by.y=c("ELEMENT_GLOBAL_ID","G_COMNAME"), all.x=TRUE)
 
