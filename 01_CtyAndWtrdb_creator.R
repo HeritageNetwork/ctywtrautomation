@@ -7,8 +7,6 @@
 
 rm(list=ls()) # clean environments
 
-library(tidyr)
-
 # Settings from Script 00
 if (!requireNamespace("here", quietly=TRUE)) install.packages("here")
 require(here)
@@ -73,7 +71,7 @@ nabaTableEGT[grep("T", nabaTableEGT$USESA_CD), "LT_IND" ] <- "Y"
 nabaTableEGT[grep("LT", nabaTableEGT$USESA_CD), "LT_IND" ] <- "Y"
 
 # NABA_1_ind_4_AnyESA_IND
-nabaTableEGT[nabaTableEGT$LT_IND=="Y" | nabaTableEGT$LE_IND=="Y" | grep("C", nabaTableEGT$USESA_CD), "ANYUSESA_IND" ] <- "Y"  
+nabaTableEGT[nabaTableEGT$LT_IND=="Y" | nabaTableEGT$LE_IND=="Y" | grep("C", nabaTableEGT$USESA_CD), "ANYUSESA_IND" ] <- "Y"  # DOES THIS WORK????
 
 # NABA_1_ind_3_CandProp_IND
 library(sqldf)

@@ -9,6 +9,8 @@ if (!requireNamespace("arcgisbinding", quietly = TRUE)) install.packages("arcgis
 require(arcgisbinding)
 if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
 require(dplyr)
+if (!requireNamespace("tidyr", quietly = TRUE)) install.packages("tidyr")
+require(tidyr)
 if (!requireNamespace("lubridate", quietly = TRUE)) install.packages("lubridate")
 require(lubridate)
 if (!requireNamespace("reshape", quietly = TRUE)) install.packages("reshape")
