@@ -7,6 +7,8 @@
 
 rm(list=ls()) # clean environments
 
+library(tidyr)
+
 # Settings from Script 00
 if (!requireNamespace("here", quietly=TRUE)) install.packages("here")
 require(here)
@@ -32,6 +34,7 @@ db <- dbConnect(SQLite(), dbname=databasename) # connect to db
 dbWriteTable(db, "county_table", county_table, overwrite=TRUE)
 dbWriteTable(db, "watershed_table", watershed_table, overwrite=TRUE)
 dbDisconnect(db) # disconnect the db
+rm(db)
 
 ###########################
 # add in NABA data
@@ -47,16 +50,56 @@ close(channel) ## Close and remove channel
 
 ## Connect to central biotics to pull out most recent data on sss
 # con <- odbcConnect("bioticscentral.natureserve.org", uid="biotics_report", pwd=rstudioapi::askForPassword("Password"))
-# Stop here and copy the "_data/queries/NABA_EGT_attributes.sql" query into Biotics.  Save the 
+# Stop here and copy the "_data/queries/NABA_EGT_attributes.sql" query into Biotics.  Save the output to the input directory in the format of "NABA_EGT_attributes_YYYYMM.csv"
 
-NABAegtid_file <- list.files(path=here::here("_data","input"), pattern=".csv$")  # --- make sure your excel file is not open.
-NABAegtid_file
-# look at the output,choose which csv you want to load, and enter its location in the list (first = 1, second = 2, etc)
+NABAegtid_file <- list.files(path=here::here("_data","input"), pattern=".csv$")  
+NABAegtid_file # look at the output,choose which csv you want to load, and enter its location in the list (first = 1, second = 2, etc)
 n <- 1
 NABAegtid_file <- here::here("_data","input", NABAegtid_file[n])
+nabaTableEGT <- read.csv(NABAegtid_file, stringsAsFactors=FALSE, colClasses = "character")  ## TEMPORARY STEP TO GET AROUND BIOTICS. THis has all the columns created
+rm("NABAegtid_file", n) # clean up the environment
+
+names(nabaTableEGT)
+
+# replace NA with blanks in certain columns
+nabaTableEGT <- nabaTableEGT %>% 
+  mutate_at(c("G1G2ORUSESA_IND","G1G2_IND","ANYUSESA_IND","LE_IND","LT_IND","CANDPROP_IND","G1G2WOUSESA_IND"), ~replace_na(.,""))
+
+# NABA_1_ind_1_LE_IND
+nabaTableEGT[grep("E", nabaTableEGT$USESA_CD), "LE_IND" ] <- "Y" 
+nabaTableEGT[grep("LE", nabaTableEGT$USESA_CD), "LE_IND" ] <- "Y" 
+
+# NABA_1_ind_2_LT_IND
+nabaTableEGT[grep("T", nabaTableEGT$USESA_CD), "LT_IND" ] <- "Y" 
+nabaTableEGT[grep("LT", nabaTableEGT$USESA_CD), "LT_IND" ] <- "Y"
+
+# NABA_1_ind_4_AnyESA_IND
+nabaTableEGT[nabaTableEGT$LT_IND=="Y" | nabaTableEGT$LE_IND=="Y" | grep("C", nabaTableEGT$USESA_CD), "ANYUSESA_IND" ] <- "Y"  
+
+# NABA_1_ind_3_CandProp_IND
+library(sqldf)
+a <- sqldf("select * from nabaTableEGT where USESA_CD = 'C' OR USESA_CD LIKE '%PE%' OR USESA_CD LIKE '%PT%' OR USESA_CD LIKE '%PSA%' ")
+
+nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
+nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & grep("PE", nabaTableEGT$USESA_CD), "CANDPROP_IND"] <- "Y"
+nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
+
+nabaTableEGT$CANDPROP_IND <- NA
 
 
-nabatableEGT <- read.csv(NABAegtid_file, stringsAsFactors=FALSE)  ## TEMPORARY STEP TO GET AROUND BIOTICS. THis has all the columns created
+UPDATE nabaTableEGT SET NABA_EGT_attributes_202206.CANDPROP_IND = "Y"
+WHERE (((NABA_EGT_attributes_202206.USESA_CD)="C") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "*PE*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "*PT*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "PSA*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null));
+
+
+
+nabaTableEGT[which(nabaTableEGT$LT_IND=="Y"),]
+
+
+
+
+
+
+
 
 nabatable2 <- merge(nabaTable, nabaTableEGT, by.x=c("EGT_ID","G_COMNAME"), by.y=c("ELEMENT_GLOBAL_ID","G_COMNAME"), all.x=TRUE)
 
