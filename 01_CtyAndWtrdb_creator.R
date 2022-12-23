@@ -45,6 +45,7 @@ channel <- odbcDriverConnect(paste0(DRIVERINFO, "DBQ=", nabaPATH))
 nabaTable <- sqlQuery(channel, "SELECT * FROM [Species-HUC];",stringsAsFactors=FALSE)
 close(channel) ## Close and remove channel
 
+
 ## Connect to central biotics to pull out most recent data on sss
 # con <- odbcConnect("bioticscentral.natureserve.org", uid="biotics_report", pwd=rstudioapi::askForPassword("Password"))
 # Stop here and copy the "_data/queries/NABA_EGT_attributes.sql" query into Biotics.  Save the output to the input directory in the format of "NABA_EGT_attributes_YYYYMM.csv"
@@ -115,6 +116,7 @@ setdiff(names(nabatable2),names(watershed_table))
 setdiff(names(watershed_table),names(nabatable2))
 
 watershed_table_check <- watershed_table[c(names(nabaTableEGT))]
+
 
 combined_table <- rbind(watershed_table_check, nabaTableEGT)
 
