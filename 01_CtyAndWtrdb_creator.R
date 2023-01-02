@@ -24,7 +24,7 @@ db <- dbConnect(SQLite(), dbname=databasename) # creates an empty database
 dbDisconnect(db) # disconnect the db
 
 # Load tables
-tbl_county <- read.table(sourceCnty, header=TRUE, sep="\t")
+tbl_county <- read.table(sourceCnty, header=TRUE, sep="\t", colClasses=c("FIPS_CD"="character"))
 tbl_watershed <- read.table(sourceWater, header=TRUE, sep="\t", colClasses=c("HUC8_CD"="character"))
 
 # Write tables to sqlite db
@@ -114,4 +114,35 @@ tbl_watershed_check <- tbl_watershed[c(names(nabaTableEGT))]
 
 
 combined_table <- rbind(tbl_watershed_check, nabaTableEGT)
+
+########################################
+# make feature classes
+
+# add in step to create an empty geodatabase, for now I just made one in the folder via Pro
+
+# counties  # note, need to document the source of the county dataset as USGS, last downloaded data, etc
+counties_sf <- arc.open(counties)
+counties_sf <- arc.select(counties_sf, fields=c("ADMIN_NAME","ADMIN_FIPS","STATE","STATE_FIPS","NAME","SQ_MILES","SUFFIX"), where_clause="STATE NOT IN ('VI', 'PR')")
+counties_sf <- arc.data2sf(counties_sf)
+
+# setdiff(tbl_county$FIPS_CD, counties_sf$ADMIN_FIPS)
+# setdiff(counties_sf$ADMIN_FIPS, tbl_county$FIPS_CD)
+
+#counties_sf <- merge(counties_sf, tbl_county, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
+
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"), counties_sf, overwrite = TRUE)
+
+
+
+
+
+# watersheds # note, need to document the source of the county dataset as USGS, last downloaded data, etc
+watersheds_sf <- arc.open(watersheds)
+watersheds_sf <- arc.select(watersheds_sf, fields=c("loaddate","name","huc8","states","areasqkm"))
+watersheds_sf <- arc.data2sf(watersheds_sf)
+
+
+#watersheds_sf <- merge(watersheds_sf, tbl_watersheds, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
+
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "watersheds_AllSpTot"), watersheds_sf, overwrite = TRUE)
 
