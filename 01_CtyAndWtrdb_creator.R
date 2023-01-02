@@ -124,6 +124,7 @@ tbl_county_sums <- tbl_county  %>%
     count_G1G2ESA = length(unique(GNAME[ANYUSESA_IND=='Y'|G1G2_IND=='Y'])),
   )
 
+tbl_county_sums$sym_count_G1G2ESA <- cut(tbl_county_sums$count_G1G2ESA, breaks = c(0, .9, 5, 20, 50, 100, max(tbl_county_sums$count_G1G2ESA)), labels=c("No Data", "1-5", "6-20", "21-50", "51-100",">100"), include.lowest=TRUE) 
 
 
 tbl_watershed_sums <- tbl_watershed  %>%
@@ -135,6 +136,8 @@ tbl_watershed_sums <- tbl_watershed  %>%
     count_G1G2ESA = length(unique(GNAME[ANYUSESA_IND=='Y'|G1G2_IND=='Y'])),
   )
 
+tbl_watershed_sums$sym_count_G1G2ESA <- cut(tbl_watershed_sums$count_G1G2ESA, breaks = c(0, .9, 5, 20, 50, 100, max(tbl_watershed_sums$count_G1G2ESA)), labels=c("No Data", "1-5", "6-20", "21-50", "51-100",">100"), include.lowest=TRUE)
+
 
 ########################################
 # make feature classes
@@ -145,25 +148,26 @@ tbl_watershed_sums <- tbl_watershed  %>%
 counties_sf <- arc.open(counties)
 counties_sf <- arc.select(counties_sf, fields=c("ADMIN_NAME","ADMIN_FIPS","STATE","STATE_FIPS","NAME","SQ_MILES","SUFFIX"), where_clause="STATE NOT IN ('VI', 'PR')")
 counties_sf <- arc.data2sf(counties_sf)
-
 # setdiff(tbl_county$FIPS_CD, counties_sf$ADMIN_FIPS)
 # setdiff(counties_sf$ADMIN_FIPS, tbl_county$FIPS_CD)
+counties_sf <- merge(counties_sf, tbl_county_sums, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
+counties_sf <- counties_sf[c("ADMIN_FIPS","ADMIN_NAME","NAME","STATE","STATE_FIPS","SQ_MILES","count_allsp","count_G1G2","count_ESA","count_G1G2ESA","sym_count_G1G2ESA","geometry")]
+arc.delete(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"))
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"), counties_sf, validate=TRUE, overwrite=TRUE)
 
-#counties_sf <- merge(counties_sf, tbl_county, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
-
-arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"), counties_sf, overwrite = TRUE)
-
-
-
-
+# county related table of species
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_county"), tbl_county, validate=TRUE, overwrite=TRUE)
+   # need to build a relationship class in ArcPy
 
 # watersheds # note, need to document the source of the county dataset as USGS, last downloaded data, etc
 watersheds_sf <- arc.open(watersheds)
 watersheds_sf <- arc.select(watersheds_sf, fields=c("loaddate","name","huc8","states","areasqkm"))
 watersheds_sf <- arc.data2sf(watersheds_sf)
+watersheds_sf <- merge(watersheds_sf, tbl_watershed_sums, by.x="huc8", by.y="HUC8_CD", all.x=TRUE)
+watersheds_sf <- watersheds_sf[c("huc8","name","states","areasqkm","count_allsp","count_G1G2","count_ESA","count_G1G2ESA","sym_count_G1G2ESA","geometry")]
+arc.delete(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "watersheds_AllSpTot"))
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "watersheds_AllSpTot"), watersheds_sf, validate=TRUE, overwrite=TRUE)
 
-
-#watersheds_sf <- merge(watersheds_sf, tbl_watersheds, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
-
-arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "watersheds_AllSpTot"), watersheds_sf, overwrite = TRUE)
-
+# watershed related table of species
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_watershed"), tbl_watershed, validate=TRUE, overwrite=TRUE)
+  # need to build a relationship class in ArcPy
