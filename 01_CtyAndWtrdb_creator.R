@@ -24,13 +24,13 @@ db <- dbConnect(SQLite(), dbname=databasename) # creates an empty database
 dbDisconnect(db) # disconnect the db
 
 # Load tables
-county_table <- read.table(sourceCnty, header=TRUE, sep="\t")
-watershed_table <- read.table(sourceWater, header=TRUE, sep="\t", colClasses=c("HUC8_CD"="character"))
+tbl_county <- read.table(sourceCnty, header=TRUE, sep="\t")
+tbl_watershed <- read.table(sourceWater, header=TRUE, sep="\t", colClasses=c("HUC8_CD"="character"))
 
 # Write tables to sqlite db
 db <- dbConnect(SQLite(), dbname=databasename) # connect to db
-dbWriteTable(db, "county_table", county_table, overwrite=TRUE)
-dbWriteTable(db, "watershed_table", watershed_table, overwrite=TRUE)
+dbWriteTable(db, "tbl_county", tbl_county, overwrite=TRUE)
+dbWriteTable(db, "tbl_watershed", tbl_watershed, overwrite=TRUE)
 dbDisconnect(db) # disconnect the db
 rm(db)
 
@@ -75,22 +75,17 @@ nabaTableEGT[grep("LT", nabaTableEGT$USESA_CD), "LT_IND" ] <- "Y"
 nabaTableEGT[nabaTableEGT$LT_IND=="Y" | nabaTableEGT$LE_IND=="Y" | grep("C", nabaTableEGT$USESA_CD), "ANYUSESA_IND" ] <- "Y"  # DOES THIS WORK????
 
 # NABA_1_ind_3_CandProp_IND
-library(sqldf)
-a <- sqldf("select * from nabaTableEGT where USESA_CD = 'C' OR USESA_CD LIKE '%PE%' OR USESA_CD LIKE '%PT%' OR USESA_CD LIKE '%PSA%' ")
-
-nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
-nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & grep("PE", nabaTableEGT$USESA_CD), "CANDPROP_IND"] <- "Y"
-nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
-
-nabaTableEGT$CANDPROP_IND <- NA
-
-
-UPDATE nabaTableEGT SET NABA_EGT_attributes_202206.CANDPROP_IND = "Y"
-WHERE (((NABA_EGT_attributes_202206.USESA_CD)="C") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "*PE*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "*PT*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "PSA*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null));
-
-
-
-nabaTableEGT[which(nabaTableEGT$LT_IND=="Y"),]
+# library(sqldf)
+# a <- sqldf("select * from nabaTableEGT where USESA_CD = 'C' OR USESA_CD LIKE '%PE%' OR USESA_CD LIKE '%PT%' OR USESA_CD LIKE '%PSA%' ")
+# nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
+# nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & grep("PE", nabaTableEGT$USESA_CD), "CANDPROP_IND"] <- "Y"
+# nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
+# nabaTableEGT$CANDPROP_IND <- NA
+# 
+# UPDATE nabaTableEGT SET NABA_EGT_attributes_202206.CANDPROP_IND = "Y"
+# WHERE (((NABA_EGT_attributes_202206.USESA_CD)="C") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "*PE*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "*PT*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "PSA*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null));
+# 
+# nabaTableEGT[which(nabaTableEGT$LT_IND=="Y"),]
 
 
 
@@ -101,22 +96,22 @@ nabaTableEGT[which(nabaTableEGT$LT_IND=="Y"),]
 
 nabatable2 <- merge(nabaTable, nabaTableEGT, by.x=c("EGT_ID","G_COMNAME"), by.y=c("ELEMENT_GLOBAL_ID","G_COMNAME"), all.x=TRUE)
 
-nabatable2a <- nabatable2[c(names(watershed_table))]
+nabatable2a <- nabatable2[c(names(tbl_watershed))]
 
 # names(nabaTable)
 # names(nabaTableEGT)
-# names(watershed_table)
+# names(tbl_watershed)
 
 names(nabatable2)[names(nabatable2) == "G_NAME"] <- "GNAME"
-names(watershed_table)[names(watershed_table) == "ELEMENT_GLOBAL_ID"] <- "EGT_ID"
+names(tbl_watershed)[names(tbl_watershed) == "ELEMENT_GLOBAL_ID"] <- "EGT_ID"
 
 
 
-setdiff(names(nabatable2),names(watershed_table))
-setdiff(names(watershed_table),names(nabatable2))
+setdiff(names(nabatable2),names(tbl_watershed))
+setdiff(names(tbl_watershed),names(nabatable2))
 
-watershed_table_check <- watershed_table[c(names(nabaTableEGT))]
+tbl_watershed_check <- tbl_watershed[c(names(nabaTableEGT))]
 
 
-combined_table <- rbind(watershed_table_check, nabaTableEGT)
+combined_table <- rbind(tbl_watershed_check, nabaTableEGT)
 
