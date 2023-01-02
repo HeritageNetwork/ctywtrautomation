@@ -158,6 +158,7 @@ arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "
 # county related table of species
 arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_county"), tbl_county, validate=TRUE, overwrite=TRUE)
    # need to build a relationship class in ArcPy
+   # something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
 
 # watersheds # note, need to document the source of the county dataset as USGS, last downloaded data, etc
 watersheds_sf <- arc.open(watersheds)
@@ -171,3 +172,19 @@ arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "
 # watershed related table of species
 arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_watershed"), tbl_watershed, validate=TRUE, overwrite=TRUE)
   # need to build a relationship class in ArcPy
+  # something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
+
+
+
+
+
+######################################
+# create metadata
+
+
+#########################################
+# create preview graphics
+
+
+########################################
+# create information for marketplace page
