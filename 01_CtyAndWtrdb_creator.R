@@ -122,3 +122,34 @@ watershed_table_check <- watershed_table[c(names(nabaTableEGT))]
 
 combined_table <- rbind(watershed_table_check, nabaTableEGT)
 
+# Find duplicates in county table
+# Jason's SQL for this step: 
+# In (SELECT [ELEMENT_GLOBAL_ID] FROM [Widget_NSX_cty_export_201904] As Tmp GROUP BY [ELEMENT_GLOBAL_ID],[STATE_COUNTY_FIPS_CD] HAVING Count(*)>1  And [STATE_COUNTY_FIPS_CD] = [Widget_NSX_cty_export_201904].[STATE_COUNTY_FIPS_CD])
+library(sqldf)
+select <- "SELECT county_table.ELEMENT_GLOBAL_ID"
+from <- "FROM county_table"
+group <- "GROUP BY ELEMENT_GLOBAL_ID, FIPS_CD"
+count <- "HAVING COUNT(*) > 1"
+
+query <- paste(select, from, group, count)
+
+sqldf(query)
+
+# Find duplicates in watershed table
+# Jason's SQL for this step:
+# In (SELECT [ELEMENT_GLOBAL_ID] FROM [Widget_NSX_huc_export_201904] As Tmp GROUP BY [ELEMENT_GLOBAL_ID],[WATERSHED_CD_HUC8] HAVING Count(*)>1  And [WATERSHED_CD_HUC8] = [Widget_NSX_huc_export_201904].[WATERSHED_CD_HUC8])
+select <- "SELECT watershed_table.EGT_ID"
+from <- "FROM watershed_table"
+group <- "GROUP BY EGT_ID, HUC8_CD"
+count <- "HAVING COUNT(*) > 1"
+
+query <- paste(select, from, group, count)
+
+sqldf(query)
+
+# May need to do other duplicate checks - Jason did some
+# on the Naba tables
+
+# Generate table with list of all species by county
+# 
+
