@@ -9,6 +9,8 @@ if (!requireNamespace("arcgisbinding", quietly = TRUE)) install.packages("arcgis
 require(arcgisbinding)
 if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
 require(dplyr)
+if (!requireNamespace("tidyr", quietly = TRUE)) install.packages("tidyr")
+require(tidyr)
 if (!requireNamespace("lubridate", quietly = TRUE)) install.packages("lubridate")
 require(lubridate)
 if (!requireNamespace("reshape", quietly = TRUE)) install.packages("reshape")
@@ -30,6 +32,9 @@ updateName <- "_refresh202301"
 sourceCnty <- "S:/Projects/BLD_Standard_Products/County_Watershed_Data/_REFRESH_202203/Data/Source/Script_exports/widget_egt_county_export_202203_v4.txt"
 sourceWater <- "S:/Projects/BLD_Standard_Products/County_Watershed_Data/_REFRESH_202203/Data/Source/Script_exports/widget_egt_watershed_202203_export_v4.txt"
 
+# path to feature classes
+counties <- "S:/Data/External/Boundaries_Adminstrative/USGS/countyp010g.gdb/countyp010g"
+watersheds <- "S:/Data/External/Hydrography/WatershedBoundaryDataset/WBD_National_GDB.gdb/WBDHU8"
 
 # create a directory for this update unless it already exists
 ifelse(!dir.exists(here::here("_data","output",updateName)), dir.create(here::here("_data","output",updateName)), FALSE)
