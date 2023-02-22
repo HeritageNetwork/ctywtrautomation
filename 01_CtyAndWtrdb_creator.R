@@ -146,10 +146,10 @@ tbl_watershed_sums$sym_count_G1G2ESA <- cut(tbl_watershed_sums$count_G1G2ESA, br
 
 # counties  # note, need to document the source of the county dataset as USGS, last downloaded data, etc
 counties_sf <- arc.open(counties)
-counties_sf <- arc.select(counties_sf, fields=c("ADMIN_NAME","ADMIN_FIPS","STATE","STATE_FIPS","NAME","SQ_MILES","SUFFIX"), where_clause="STATE NOT IN ('VI', 'PR')")
+counties_sf <- arc.select(counties_sf, fields=c("ADMIN_NAME","ADMIN_FIPS","STATE","STATE_FIPS","NAME","SQ_MILES","SUFFIX"), where_clause="STATE NOT IN ('VI', 'PR') AND POP<>-999")
 counties_sf <- arc.data2sf(counties_sf)
-# setdiff(tbl_county$FIPS_CD, counties_sf$ADMIN_FIPS)
-# setdiff(counties_sf$ADMIN_FIPS, tbl_county$FIPS_CD)
+ setdiff(tbl_county_sums$FIPS_CD, counties_sf$ADMIN_FIPS)
+ setdiff(counties_sf$ADMIN_FIPS, tbl_county_sums$FIPS_CD)
 counties_sf <- merge(counties_sf, tbl_county_sums, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
 counties_sf <- counties_sf[c("ADMIN_FIPS","ADMIN_NAME","NAME","STATE","STATE_FIPS","SQ_MILES","count_allsp","count_G1G2","count_ESA","count_G1G2ESA","sym_count_G1G2ESA","geometry")]
 arc.delete(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"))
