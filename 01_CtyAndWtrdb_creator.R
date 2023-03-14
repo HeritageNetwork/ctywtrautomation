@@ -72,19 +72,14 @@ nabaTableEGT[grep("LE", nabaTableEGT$USESA_CD), "LE_IND" ] <- "Y"
 nabaTableEGT[grep("T", nabaTableEGT$USESA_CD), "LT_IND" ] <- "Y" 
 nabaTableEGT[grep("LT", nabaTableEGT$USESA_CD), "LT_IND" ] <- "Y"
 
-<<<<<<< HEAD
 # NABA_1_ind_3_CandProp_IND
 # nabaTableEGT[nabaTableEGT$LT_IND=="Y", "CANDPROP_IND" ] <- "Y"
-=======
+
 # NABA_1_ind_4_AnyESA_IND
 nabaTableEGT[nabaTableEGT$LT_IND=="Y", "ANYUSESA_IND" ] <- "Y"
 nabaTableEGT[nabaTableEGT$LE_IND=="Y", "ANYUSESA_IND" ] <- "Y"
 nabaTableEGT[grep("C", nabaTableEGT$USESA_CD), "ANYUSESA_IND" ] <- "Y"
 
-# NABA_1_ind_3_CandProp_IND
-#####nabaTableEGT[nabaTableEGT$LT_IND=="Y", "CANDPROP_IND" ] <- "Y"
-
->>>>>>> 6c4d851e2f7841d115db8a55ebe952081dcea228
 # library(sqldf)
 # a <- sqldf("select * from nabaTableEGT where USESA_CD = 'C' OR USESA_CD LIKE '%PE%' OR USESA_CD LIKE '%PT%' OR USESA_CD LIKE '%PSA%' ")
 # nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
