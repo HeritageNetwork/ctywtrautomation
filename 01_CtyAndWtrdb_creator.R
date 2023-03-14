@@ -40,7 +40,7 @@ channel <- odbcDriverConnect(paste0(DRIVERINFO, "DBQ=", nabaPATH))
 ## Load data into R dataframe
 nabaTable <- sqlQuery(channel, "SELECT * FROM [Species-HUC];",stringsAsFactors=FALSE)
 close(channel) ## Close and remove channel
-
+rm(channel, DRIVERINFO, nabaPATH)
 
 ## Connect to central biotics to pull out most recent data on sss
 # con <- odbcConnect("bioticscentral.natureserve.org", uid="biotics_report", pwd=rstudioapi::askForPassword("Password"))
