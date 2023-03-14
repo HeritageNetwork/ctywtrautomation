@@ -13,10 +13,6 @@ require(here)
 #source(here::here("Automation_scripts", "00_PathsAndSettings_CtyWtr.r"))
 source(here::here("00_PathsAndSettings_CtyWtr.r"))
 
-# Make sure the input and output directories have been created:
-ifelse(!dir.exists(here::here("_data")), dir.create(here::here("_data")), FALSE)
-ifelse(!dir.exists(here::here("_data","input")), dir.create(here::here("_data","input")), FALSE)
-ifelse(!dir.exists(here::here("_data","output")), dir.create(here::here("_data","output")), FALSE)
 
 ########################
 # Convert Biotics Exports to SQLite Databases

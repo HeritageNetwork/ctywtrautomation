@@ -36,7 +36,10 @@ sourceWater <- "S:/Projects/BLD_Standard_Products/County_Watershed_Data/_REFRESH
 counties <- "S:/Data/External/Boundaries_Adminstrative/USGS/countyp010g.gdb/countyp010g"
 watersheds <- "S:/Data/External/Hydrography/WatershedBoundaryDataset/WBD_National_GDB.gdb/WBDHU8"
 
-# create a directory for this update unless it already exists
+# Make sure the input and output directories have been created:
+ifelse(!dir.exists(here::here("_data")), dir.create(here::here("_data")), FALSE)
+ifelse(!dir.exists(here::here("_data","input")), dir.create(here::here("_data","input")), FALSE)
+ifelse(!dir.exists(here::here("_data","output")), dir.create(here::here("_data","output")), FALSE)
 ifelse(!dir.exists(here::here("_data","output",updateName)), dir.create(here::here("_data","output",updateName)), FALSE)
 
 # rdata file 
