@@ -4,6 +4,7 @@
 .Ruserdata
 _data/input/*
 _data/output/*
+_dataoutput/_refresh202301
 
 *.Rproj
 *.sqlite
