@@ -145,7 +145,7 @@ setdiff(names(tbl_watershed),names(nabatable2))
 
 #watershed_table_check <- tbl_watershed[c(names(nabaTableEGT))]
 
-combined_table <- rbind(tbl_watershed_check, nabaTableEGT)
+#combined_table <- rbind(tbl_watershed_check, nabaTableEGT)
 
 #########################################
 # make a summary table of counts of species by county and watershed
@@ -191,11 +191,12 @@ arc.delete(here::here("_data", "output", updateName, paste0(updateName,".gdb"), 
 arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"), counties_sf, validate=TRUE)
 
 # county related table of species
-arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_county"), tbl_county, validate=TRUE, overwrite=TRUE)
-   # need to build a relationship class in ArcPy
-   # something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_county"), tbl_county, overwrite=TRUE)
 
+# need to build a relationship class in ArcPy
+# something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
 
+########################################
 # watersheds # note, need to document the source of the county dataset as USGS, last downloaded data, etc
 watersheds_sf <- arc.open(watersheds)
 watersheds_sf <- arc.select(watersheds_sf, fields=c("loaddate","name","huc8","states","areasqkm"))
@@ -206,9 +207,10 @@ arc.delete(here::here("_data", "output", updateName, paste0(updateName,".gdb"), 
 arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "watersheds_AllSpTot"), watersheds_sf, validate=TRUE, overwrite=TRUE)
 
 # watershed related table of species
-arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_watershed"), tbl_watershed, validate=TRUE, overwrite=TRUE)
-  # need to build a relationship class in ArcPy
-  # something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_water"), tbl_watershed, overwrite=TRUE)
+
+# need to build a relationship class in ArcPy
+# something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
 
 
 ####################################################
