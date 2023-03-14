@@ -10,7 +10,6 @@ rm(list=ls()) # clean environments
 # Settings from Script 00
 if (!requireNamespace("here", quietly=TRUE)) install.packages("here")
 require(here)
-#source(here::here("Automation_scripts", "00_PathsAndSettings_CtyWtr.r"))
 source(here::here("00_PathsAndSettings_CtyWtr.r"))
 
 
@@ -183,10 +182,9 @@ tbl_watershed_sums <- tbl_watershed  %>%
 tbl_watershed_sums$sym_count_G1G2ESA <- cut(tbl_watershed_sums$count_G1G2ESA, breaks = c(0, .9, 5, 20, 50, 100, max(tbl_watershed_sums$count_G1G2ESA)), labels=c("No Data", "1-5", "6-20", "21-50", "51-100",">100"), include.lowest=TRUE)
 
 
-########################################
+####################################################################################################################################
 # make feature classes
 
-# add in step to create an empty geodatabase, for now I just made one in the folder via Pro
 
 # counties  # note, need to document the source of the county dataset as USGS, last downloaded data, etc
 counties_sf <- arc.open(counties)
