@@ -5,3 +5,6 @@
 _data/input/
 _data/output/
 
+.Rproj
+.sqlite
+.txt
