@@ -12,23 +12,9 @@ if (!requireNamespace("here", quietly=TRUE)) install.packages("here")
 require(here)
 source(here::here("00_PathsAndSettings_CtyWtr.r"))
 
-
-########################
-# # Convert Biotics Exports to SQLite Databases
-# db <- dbConnect(SQLite(), dbname=databasename) # creates an empty database
-# dbDisconnect(db) # disconnect the db
-
 # Load tables
 tbl_county <- read.table(sourceCnty, header=TRUE, sep="\t", colClasses=c("FIPS_CD"="character"))
 tbl_watershed <- read.table(sourceWater, header=TRUE, sep="\t", colClasses=c("HUC8_CD"="character"))
-
-# # Write tables to sqlite db
-# db <- dbConnect(SQLite(), dbname=databasename) # connect to db
-# dbWriteTable(db, "tbl_county", tbl_county, overwrite=TRUE)
-# dbWriteTable(db, "tbl_watershed", tbl_watershed, overwrite=TRUE)
-# dbDisconnect(db) # disconnect the db
-# rm(db)
-
 
 ##############################################################################################################
 # add in NABA data
