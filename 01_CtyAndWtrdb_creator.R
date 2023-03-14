@@ -196,9 +196,52 @@ arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "
 arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_water"), tbl_watershed, overwrite=TRUE)
 
 # need to build a relationship class in ArcPy
-# something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
 
 
+# if (!requireNamespace("devtools", quietly=TRUE)) install.packages("devtools")
+# require(devtools)
+# install_github("ChristopherTracey/NatureServeTools")
+library("NatureServeTools")
+
+python_path <- 'C:/ProgramFiles/ArcGIS/Pro/bin/Python/envs/arcgispro-py3'
+loadPython(python_path)
+
+arcpy = import("arcpy")
+arcpy$env$workspace <- here::here("_data", "output", updateName, paste0(updateName,".gdb"))#"C:/data" # Set the workspace
+
+# Create a relationship class
+arcpy$CreateRelationshipClass_management(
+  intable,
+  jointable,
+  rclass,
+  "SIMPLE",
+  "tbl_water",
+  "watersheds_AllSpTot",
+  "NONE",
+  "ONE_TO_MANY",
+  "NONE",
+  "huc8",
+  "HUC8_CD"
+)
+
+
+
+
+
+wkpath <-  here::here("_data", "output", updateName, paste0(updateName,".gdb"))#"C:/data" # Set the workspace
+
+intable <- file.path(wkpath, "watersheds_AllSpTot")
+jointable <- file.path(wkpath, "tbl_water")
+rclass <- file.path(wkpath, "watersheds_AllSpTot_tbl_water")
+  
+arcpy$management$CreateRelationshipClass(
+  'r"S:/Projects/_Workspaces/Christopher_Tracey/CountyWatershed/ctywtrautomation/_data/output/_refresh202303/_refresh202303.gdb/watersheds_AllSpTot"', 
+  jointable, 
+  rclass, "SIMPLE", "tbl_water", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
+
+arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_water", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202303\_refresh202303.gdb\watersheds_AllSpTot_tbl_water", "SIMPLE", "tbl_water", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
+
+S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202303\_refresh202303.gdb
 ####################################################
 # Create Derivative Products (e.g. ESA map for storymap)
 
