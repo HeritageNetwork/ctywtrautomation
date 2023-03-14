@@ -10,3 +10,4 @@ _dataoutput/_refresh202301
 *.sqlite
 *.txt
 *.RData*
+_data/output/_refresh202301/test.sqlite
