@@ -48,11 +48,7 @@ updateData <- here::here("_data","output",updateName,paste(updateName, "RData", 
 # output database name
 databasename <- here::here("_data","output",updateName,"test.sqlite")
 
-# cutoff and exclusions for records ***Also not needed
-# this refresh? Do the SQL Biotics scripts take care of this??
-
-# final fields for arcgis ***Need to double check if these are
-# the correct fields
+# final fields for arcgis ***Need to double check if these are the correct fields
 final_fields <- c("ELEMENT_GLOBAL_ID", "INFORMAL_TAX", "GNAME", "G_COMNAME", "G_RANK", "ROUNDED_G_RANK", "USESA_STATUS", "S_RANK", "S_RANK_ROUNDED", "MAX_OBS_YEAR", "BEST_EO_RANK", "OCC_SRC", "FIPS_CD", "COUNTY_NAME", "STATE_CD", "NSX_LINK")
 
 # north america albers equal area conic projection
