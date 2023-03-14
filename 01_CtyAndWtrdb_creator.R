@@ -30,7 +30,7 @@ tbl_watershed <- read.table(sourceWater, header=TRUE, sep="\t", colClasses=c("HU
 # rm(db)
 
 
-###########################
+##############################################################################################################
 # add in NABA data
 
 ## Set up driver info and database path
@@ -70,6 +70,13 @@ nabaTableEGT[grep("LT", nabaTableEGT$USESA_CD), "LT_IND" ] <- "Y"
 # NABA_1_ind_3_CandProp_IND
 # nabaTableEGT[nabaTableEGT$LT_IND=="Y", "CANDPROP_IND" ] <- "Y"
 
+# UPDATE "nabaTableEGT"
+# SET "CANDPROP_IND" = "Y"
+# WHERE ((NABA_EGT_attributes_202206.USESA_CD)="C") AND (is.null(NABA_EGT_attributes_202206.LE_IND)) AND (is.null(NABA_EGT_attributes_202206.LT_IND)) OR 
+# ((NABA_EGT_attributes_202206.USESA_CD) %Like% "%PE") AND (is.null(NABA_EGT_attributes_202206.LE_IND)) AND (is.null(NABA_EGT_attributes_202206.LT_IND)) OR 
+# ((NABA_EGT_attributes_202206.USESA_CD) %Like% "%PT") AND (is.null(NABA_EGT_attributes_202206.LE_IND)) AND (is.null(NABA_EGT_attributes_202206.LT_IND)) OR 
+# ((NABA_EGT_attributes_202206.USESA_CD) %Like% "%PSA") AND (is.null(NABA_EGT_attributes_202206.LE_IND)) AND (is.null(NABA_EGT_attributes_202206.LT_IND));
+
 # NABA_1_ind_4_AnyESA_IND
 nabaTableEGT[nabaTableEGT$LT_IND=="Y", "ANYUSESA_IND" ] <- "Y"
 nabaTableEGT[nabaTableEGT$LE_IND=="Y", "ANYUSESA_IND" ] <- "Y"
@@ -82,19 +89,6 @@ nabaTableEGT[grep("C", nabaTableEGT$USESA_CD), "ANYUSESA_IND" ] <- "Y"
 # nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
 # nabaTableEGT$CANDPROP_IND <- NA
 
-# UPDATE "nabaTableEGT"
-# SET "CANDPROP_IND" = "Y"
-# WHERE ((NABA_EGT_attributes_202206.USESA_CD)="C") AND (is.null(NABA_EGT_attributes_202206.LE_IND)) AND (is.null(NABA_EGT_attributes_202206.LT_IND)) OR 
-# ((NABA_EGT_attributes_202206.USESA_CD) %Like% "%PE") AND (is.null(NABA_EGT_attributes_202206.LE_IND)) AND (is.null(NABA_EGT_attributes_202206.LT_IND)) OR 
-# ((NABA_EGT_attributes_202206.USESA_CD) %Like% "%PT") AND (is.null(NABA_EGT_attributes_202206.LE_IND)) AND (is.null(NABA_EGT_attributes_202206.LT_IND)) OR 
-# ((NABA_EGT_attributes_202206.USESA_CD) %Like% "%PSA") AND (is.null(NABA_EGT_attributes_202206.LE_IND)) AND (is.null(NABA_EGT_attributes_202206.LT_IND));
-
-# NABA_1_ind_4_AnyESA_IND
-nabaTableEGT[nabaTableEGT$LT_IND=="Y", "ANYUSESA_IND" ] <- "Y"
-nabaTableEGT[nabaTableEGT$LE_IND=="Y", "ANYUSESA_IND" ] <- "Y"
-nabaTableEGT[grep("C", nabaTableEGT$USESA_CD), "ANYUSESA_IND" ] <- "Y"
-#nabaTableEGT[nabaTableEGT$CANDPROP_IND=="Y", "ANYUSESA_IND" ] <- "Y"
-
 # NABA_1_ind_5_G1G2woESA_IND #DO BOTH CONDITIONS NEED TO BE MET?
 nabaTableEGT[nabaTableEGT$G1G2_IND=="Y", "G1G2woESA_IND" ] <- "Y"
 nabaTableEGT[is.null(nabaTableEGT$ANYUSESA_IND), "G1G2woESA_IND" ] <- "Y"
@@ -104,7 +98,7 @@ nabaTableEGT[nabaTableEGT$ANYUSESA_IND=="Y", "GIG2ORUSESA_IND" ] <- "Y"
 nabaTableEGT[nabaTableEGT$G1G2_IND=="Y", "G1G2ORUSESA_IND" ] <- "Y"
 
 # NABA_1_ind_7_counts
-length(which(nabaTableEGT$G1G2_IND=="Y"))
+cat("There are",length(which(nabaTableEGT$G1G2_IND=="Y")),"species that are G1 or G2") 
 length(which(nabaTableEGT$LE_IND=="Y"))
 length(which(nabaTableEGT$LT_IND=="Y"))
 length(which(nabaTableEGT$CANDPROP_IND=="Y"))
@@ -133,7 +127,6 @@ group <- "GROUP BY ELEMENT_GLOBAL_ID, HUC8_CD"
 count <- "HAVING COUNT(*) > 1"
 
 query <- paste(select, from, group, count)
-
 sqldf(query)
 
 nabatable2 <- merge(nabaTable, nabaTableEGT, by.x=c("EGT_ID","G_COMNAME"), by.y=c("ELEMENT_GLOBAL_ID","G_COMNAME"), all.x=TRUE)
@@ -195,12 +188,13 @@ counties_sf <- arc.data2sf(counties_sf)
 counties_sf <- merge(counties_sf, tbl_county_sums, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
 counties_sf <- counties_sf[c("ADMIN_FIPS","ADMIN_NAME","NAME","STATE","STATE_FIPS","SQ_MILES","count_allsp","count_G1G2","count_ESA","count_G1G2ESA","sym_count_G1G2ESA","geometry")]
 arc.delete(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"))
-arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"), counties_sf, validate=TRUE, overwrite=TRUE)
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"), counties_sf, validate=TRUE)
 
 # county related table of species
 arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_county"), tbl_county, validate=TRUE, overwrite=TRUE)
    # need to build a relationship class in ArcPy
    # something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
+
 
 # watersheds # note, need to document the source of the county dataset as USGS, last downloaded data, etc
 watersheds_sf <- arc.open(watersheds)
@@ -217,7 +211,8 @@ arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "
   # something like: arcpy.management.CreateRelationshipClass("watersheds_AllSpTot", "tbl_watershed", r"S:\Projects\_Workspaces\Christopher_Tracey\CountyWatershed\ctywtrautomation\_data\output\_refresh202301\_refresh202301.gdb\watersheds_AllSpTot_tbl_watershed", "SIMPLE", "tbl_watershed", "watersheds_AllSpTot", "NONE", "ONE_TO_MANY", "NONE", "huc8", "HUC8_CD", '', '')
 
 
-
+####################################################
+# Create Derivative Products (e.g. ESA map for storymap)
 
 
 ######################################
