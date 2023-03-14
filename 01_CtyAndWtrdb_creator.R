@@ -86,7 +86,6 @@ nabaTableEGT[grep("C", nabaTableEGT$USESA_CD), "ANYUSESA_IND" ] <- "Y"
 # nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & grep("PE", nabaTableEGT$USESA_CD), "CANDPROP_IND"] <- "Y"
 # nabaTableEGT[nabaTableEGT$LT_IND!="Y" & nabaTableEGT$LE_IND!="Y" & nabaTableEGT$USESA_CD=="C", "CANDPROP_IND"] <- "Y"
 # nabaTableEGT$CANDPROP_IND <- NA
-<<<<<<< HEAD
 
 # UPDATE "nabaTableEGT"
 # SET "CANDPROP_IND" = "Y"
@@ -159,32 +158,6 @@ setdiff(names(tbl_watershed),names(nabatable2))
 #watershed_table_check <- tbl_watershed[c(names(nabaTableEGT))]
 
 combined_table <- rbind(tbl_watershed_check, nabaTableEGT)
-=======
-# 
-# UPDATE nabaTableEGT SET NABA_EGT_attributes_202206.CANDPROP_IND = "Y"
-# WHERE (((NABA_EGT_attributes_202206.USESA_CD)="C") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "*PE*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "*PT*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null)) OR (((NABA_EGT_attributes_202206.USESA_CD) Like "PSA*") AND ((NABA_EGT_attributes_202206.LE_IND) Is Null) AND ((NABA_EGT_attributes_202206.LT_IND) Is Null));
-# 
-# nabaTableEGT[which(nabaTableEGT$LT_IND=="Y"),]
-# 
-# nabatable2 <- merge(nabaTable, nabaTableEGT, by.x=c("EGT_ID","G_COMNAME"), by.y=c("ELEMENT_GLOBAL_ID","G_COMNAME"), all.x=TRUE)
-# 
-# nabatable2a <- nabatable2[c(names(tbl_watershed))]
-# 
-# # names(nabaTable)
-# # names(nabaTableEGT)
-# # names(tbl_watershed)
-# 
-# names(nabatable2)[names(nabatable2) == "G_NAME"] <- "GNAME"
-# names(tbl_watershed)[names(tbl_watershed) == "ELEMENT_GLOBAL_ID"] <- "EGT_ID"
-# 
-# setdiff(names(nabatable2),names(tbl_watershed))
-# setdiff(names(tbl_watershed),names(nabatable2))
-# 
-# tbl_watershed_check <- tbl_watershed[c(names(nabaTableEGT))]
-# 
-# 
-# combined_table <- rbind(tbl_watershed_check, nabaTableEGT)
->>>>>>> 6c4d851e2f7841d115db8a55ebe952081dcea228
 
 #########################################
 # make a summary table of counts of species by county and watershed
