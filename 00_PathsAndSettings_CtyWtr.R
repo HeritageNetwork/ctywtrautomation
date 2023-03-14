@@ -52,8 +52,6 @@ databasename <- here::here("_data","output",updateName,"test.sqlite")
 final_fields <- c("ELEMENT_GLOBAL_ID", "INFORMAL_TAX", "GNAME", "G_COMNAME", "G_RANK", "ROUNDED_G_RANK", "USESA_STATUS", "S_RANK", "S_RANK_ROUNDED", "MAX_OBS_YEAR", "BEST_EO_RANK", "OCC_SRC", "FIPS_CD", "COUNTY_NAME", "STATE_CD", "NSX_LINK")
 
 # north america albers equal area conic projection
-# ***DOUBLE CHECK***
-albersconic <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 
-+x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"
+albersconic <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs" # ***DOUBLE CHECK***
 
 # function to load species list ***Needed next refresh?
