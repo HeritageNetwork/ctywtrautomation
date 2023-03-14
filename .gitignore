@@ -2,10 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
-_data/input/
-_data/output/
+_data/input/*
+_data/output/*
 
 *.Rproj
 *.sqlite
 *.txt
-*.Rata*
+*.RData*
