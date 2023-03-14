@@ -268,7 +268,4 @@ arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "
 
 ########################################
 # create information for marketplace page
-<<<<<<< HEAD
 
-=======
->>>>>>> 6c4d851e2f7841d115db8a55ebe952081dcea228
