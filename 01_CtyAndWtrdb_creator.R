@@ -201,10 +201,14 @@ arcpy$CreateRelationshipClass_management(
   "FIPS_CD"
 )
 
-
-
-
-
+# set the aliases to the watershed field names
+arcpy$management$AlterField(in_table=intable, field="NAME", new_field_alias="County Name")
+arcpy$management$AlterField(in_table=intable, field="STATE", new_field_alias="State")
+arcpy$management$AlterField(in_table=intable, field="SQ_MILES", new_field_alias="Area (sqmi)")
+arcpy$management$AlterField(in_table=intable, field="count_allsp", new_field_alias="Count - All Species")
+arcpy$management$AlterField(in_table=intable, field="count_G1G2", new_field_alias="Count - G1/G2 Species")
+arcpy$management$AlterField(in_table=intable, field="count_ESA", new_field_alias="Count - ESA Species")
+arcpy$management$AlterField(in_table=intable, field="count_G1G2ESA", new_field_alias="Count - G1/G2 & ESA Species")
 
 
 ########################################
@@ -240,7 +244,14 @@ arcpy$CreateRelationshipClass_management(
   "HUC8_CD"
 )
 
-
+# set the aliases to the watershed field names
+arcpy$management$AlterField(in_table=intable, field="name", new_field_alias="Watershed Name")
+arcpy$management$AlterField(in_table=intable, field="states", new_field_alias="States")
+arcpy$management$AlterField(in_table=intable, field="areasqkm", new_field_alias="Area (sqkm)")
+arcpy$management$AlterField(in_table=intable, field="count_allsp", new_field_alias="Count - All Species")
+arcpy$management$AlterField(in_table=intable, field="count_G1G2", new_field_alias="Count - G1/G2 Species")
+arcpy$management$AlterField(in_table=intable, field="count_ESA", new_field_alias="Count - ESA Species")
+arcpy$management$AlterField(in_table=intable, field="count_G1G2ESA", new_field_alias="Count - G1/G2 & ESA Species")
 
 ####################################################
 # Create Derivative Products (e.g. ESA map for storymap)
