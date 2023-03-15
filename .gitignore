@@ -2,6 +2,12 @@
 .Rhistory
 .RData
 .Ruserdata
-_data/input/
-_data/output/
+_data/input/*
+_data/output/*
+_dataoutput/_refresh202301
 
+*.Rproj
+*.sqlite
+*.txt
+*.RData*
+_data/output/_refresh202301/test.sqlite
