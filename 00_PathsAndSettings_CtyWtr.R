@@ -19,6 +19,14 @@ if (!requireNamespace("dplyr", quietly=TRUE)) install.packages("dplyr")
 require(dplyr)
 if (!requireNamespace("RODBC", quietly=TRUE)) install.packages("RODBC")
 require(RODBC)
+# if (!requireNamespace("devtools", quietly=TRUE)) install.packages("devtools")
+# require(devtools)
+# install_github("ChristopherTracey/NatureServeTools")
+library("NatureServeTools")
+
+# load python
+python_path <- 'C:/ProgramFiles/ArcGIS/Pro/bin/Python/envs/arcgispro-py3'
+loadPython(python_path)
 
 #load the arcgis license
 arc.check_product()
