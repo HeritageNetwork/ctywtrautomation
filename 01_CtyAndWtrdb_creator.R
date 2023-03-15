@@ -84,13 +84,13 @@ nabaTableEGT[nabaTableEGT$ANYUSESA_IND=="Y", "GIG2ORUSESA_IND" ] <- "Y"
 nabaTableEGT[nabaTableEGT$G1G2_IND=="Y", "G1G2ORUSESA_IND" ] <- "Y"
 
 # NABA_1_ind_7_counts
-cat("There are",length(which(nabaTableEGT$G1G2_IND=="Y")),"species that are G1 or G2") 
-length(which(nabaTableEGT$LE_IND=="Y"))
-length(which(nabaTableEGT$LT_IND=="Y"))
-length(which(nabaTableEGT$CANDPROP_IND=="Y"))
-length(which(nabaTableEGT$ANYUSESA_IND=="Y"))
-length(which(nabaTableEGT$G1G2WOUSESA_IND=="Y"))
-length(which(nabaTableEGT$G1G2ORUSESA_IND=="Y"))
+cat("There are",length(which(nabaTableEGT$G1G2_IND=="Y")),"species in the NABA dataset that are G1 or G2\\") 
+cat("There are",length(which(nabaTableEGT$LE_IND=="Y")),"species in the NABA dataset that are Endangered\\") 
+cat("There are",length(which(nabaTableEGT$LT_IND=="Y")),"species in the NABA dataset that are Threatened\\") 
+cat("There are",length(which(nabaTableEGT$CANDPROP_IND=="Y")),"species in the NABA dataset that are Candidate/Proposed\\") 
+cat("There are",length(which(nabaTableEGT$ANYUSESA_IND=="Y")),"species in the NABA dataset that have any ESA status\\") 
+cat("There are",length(which(nabaTableEGT$G1G2WOUSESA_IND=="Y")),"species in the NABA dataset that are ...\\") 
+cat("There are",length(which(nabaTableEGT$G1G2ORUSESA_IND=="Y")),"species in the NABA dataset that are ...\\") 
 
 # Find duplicates in county table
 # Jason's SQL for this step: 
