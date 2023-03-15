@@ -93,8 +93,7 @@ cat("There are",length(which(nabaTableEGT$G1G2WOUSESA_IND=="Y")),"species in the
 cat("There are",length(which(nabaTableEGT$G1G2ORUSESA_IND=="Y")),"species in the NABA dataset that are ...\\") 
 
 # Find duplicates in county table
-# Jason's SQL for this step: 
-# In (SELECT [ELEMENT_GLOBAL_ID] FROM [Widget_NSX_cty_export_201904] As Tmp GROUP BY [ELEMENT_GLOBAL_ID],[STATE_COUNTY_FIPS_CD] HAVING Count(*)>1  And [STATE_COUNTY_FIPS_CD] = [Widget_NSX_cty_export_201904].[STATE_COUNTY_FIPS_CD])
+# Jason's SQL for this step: In (SELECT [ELEMENT_GLOBAL_ID] FROM [Widget_NSX_cty_export_201904] As Tmp GROUP BY [ELEMENT_GLOBAL_ID],[STATE_COUNTY_FIPS_CD] HAVING Count(*)>1  And [STATE_COUNTY_FIPS_CD] = [Widget_NSX_cty_export_201904].[STATE_COUNTY_FIPS_CD])
 library(sqldf)
 select <- "SELECT tbl_county.ELEMENT_GLOBAL_ID"
 from <- "FROM tbl_county"
@@ -105,8 +104,7 @@ query <- paste(select, from, group, count)
 sqldf(query)
 
 # Find duplicates in watershed table
-# Jason's SQL for this step:
-# In (SELECT [ELEMENT_GLOBAL_ID] FROM [Widget_NSX_huc_export_201904] As Tmp GROUP BY [ELEMENT_GLOBAL_ID],[WATERSHED_CD_HUC8] HAVING Count(*)>1  And [WATERSHED_CD_HUC8] = [Widget_NSX_huc_export_201904].[WATERSHED_CD_HUC8])
+# Jason's SQL for this step:  In (SELECT [ELEMENT_GLOBAL_ID] FROM [Widget_NSX_huc_export_201904] As Tmp GROUP BY [ELEMENT_GLOBAL_ID],[WATERSHED_CD_HUC8] HAVING Count(*)>1  And [WATERSHED_CD_HUC8] = [Widget_NSX_huc_export_201904].[WATERSHED_CD_HUC8])
 select <- "SELECT tbl_watershed.ELEMENT_GLOBAL_ID"
 from <- "FROM tbl_watershed"
 group <- "GROUP BY ELEMENT_GLOBAL_ID, HUC8_CD"
@@ -115,10 +113,9 @@ count <- "HAVING COUNT(*) > 1"
 query <- paste(select, from, group, count)
 sqldf(query)
 
+#
 nabatable2 <- merge(nabaTable, nabaTableEGT, by.x=c("EGT_ID","G_COMNAME"), by.y=c("ELEMENT_GLOBAL_ID","G_COMNAME"), all.x=TRUE)
-
 #nabatable2a <- nabatable2[c(names(tbl_watershed))]
-
 names(nabaTable)
 names(nabaTableEGT)
 names(tbl_watershed)
@@ -145,9 +142,9 @@ tbl_county_sums <- tbl_county  %>%
     count_ESA = length(GNAME[ANYUSESA_IND=='Y']),
     count_G1G2ESA = length(unique(GNAME[ANYUSESA_IND=='Y'|G1G2_IND=='Y'])),
   )
-
-tbl_county_sums$sym_count_G1G2ESA <- cut(tbl_county_sums$count_G1G2ESA, breaks = c(0, .9, 5, 20, 50, 100, max(tbl_county_sums$count_G1G2ESA)), labels=c("No Data", "1-5", "6-20", "21-50", "51-100",">100"), include.lowest=TRUE) 
-
+tbl_county_sums$sym_count_G1G2ESA <- cut(tbl_county_sums$count_G1G2ESA, 
+                                         breaks = c(0, .9, 5, 20, 50, 100, max(tbl_county_sums$count_G1G2ESA)), 
+                                         labels=c("No Data", "1-5", "6-20", "21-50", "51-100",">100"), include.lowest=TRUE) 
 
 tbl_watershed_sums <- tbl_watershed  %>%
   group_by(HUC8_CD)  %>%
@@ -157,8 +154,9 @@ tbl_watershed_sums <- tbl_watershed  %>%
     count_ESA = length(GNAME[ANYUSESA_IND=='Y']),
     count_G1G2ESA = length(unique(GNAME[ANYUSESA_IND=='Y'|G1G2_IND=='Y'])),
   )
-
-tbl_watershed_sums$sym_count_G1G2ESA <- cut(tbl_watershed_sums$count_G1G2ESA, breaks = c(0, .9, 5, 20, 50, 100, max(tbl_watershed_sums$count_G1G2ESA)), labels=c("No Data", "1-5", "6-20", "21-50", "51-100",">100"), include.lowest=TRUE)
+tbl_watershed_sums$sym_count_G1G2ESA <- cut(tbl_watershed_sums$count_G1G2ESA, 
+                                            breaks = c(0, .9, 5, 20, 50, 100, max(tbl_watershed_sums$count_G1G2ESA)), 
+                                            labels=c("No Data", "1-5", "6-20", "21-50", "51-100",">100"), include.lowest=TRUE)
 
 
 ####################################################################################################################################
@@ -166,12 +164,15 @@ tbl_watershed_sums$sym_count_G1G2ESA <- cut(tbl_watershed_sums$count_G1G2ESA, br
 
 wkpath <- here::here("_data", "output", updateName, paste0(updateName,".gdb"))
 
+arcpy = import("arcpy")
+arcpy$env$workspace <- here::here("_data", "output", updateName, paste0(updateName,".gdb"))#"C:/data" # Set the workspace
+
 # counties  # note, need to document the source of the county dataset as USGS, last downloaded data, etc
 counties_sf <- arc.open(counties)
 counties_sf <- arc.select(counties_sf, fields=c("ADMIN_NAME","ADMIN_FIPS","STATE","STATE_FIPS","NAME","SQ_MILES","SUFFIX"), where_clause="STATE NOT IN ('VI', 'PR') AND POP<>-999")
 counties_sf <- arc.data2sf(counties_sf)
- setdiff(tbl_county_sums$FIPS_CD, counties_sf$ADMIN_FIPS)
- setdiff(counties_sf$ADMIN_FIPS, tbl_county_sums$FIPS_CD)
+setdiff(tbl_county_sums$FIPS_CD, counties_sf$ADMIN_FIPS)
+setdiff(counties_sf$ADMIN_FIPS, tbl_county_sums$FIPS_CD)
 counties_sf <- merge(counties_sf, tbl_county_sums, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
 counties_sf <- counties_sf[c("ADMIN_FIPS","ADMIN_NAME","NAME","STATE","STATE_FIPS","SQ_MILES","count_allsp","count_G1G2","count_ESA","count_G1G2ESA","sym_count_G1G2ESA","geometry")]
 arc.delete(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_AllSpTot"))
@@ -181,9 +182,6 @@ arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "
 arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_county"), tbl_county, overwrite=TRUE)
 
 # need to build a relationship class in ArcPy
-arcpy = import("arcpy")
-arcpy$env$workspace <- here::here("_data", "output", updateName, paste0(updateName,".gdb"))#"C:/data" # Set the workspace
-
 intable <- file.path(wkpath, "counties_AllSpTot")
 jointable <- file.path(wkpath, "tbl_county")
 rclass <- file.path(wkpath, "counties_AllSpTot_tbl_county")
@@ -223,9 +221,6 @@ arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "
 arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "tbl_water"), tbl_watershed, overwrite=TRUE)
 
 # need to build a relationship class in ArcPy
-arcpy = import("arcpy")
-arcpy$env$workspace <- here::here("_data", "output", updateName, paste0(updateName,".gdb"))#"C:/data" # Set the workspace
-
 intable <- file.path(wkpath, "watersheds_AllSpTot")
 jointable <- file.path(wkpath, "tbl_water")
 rclass <- file.path(wkpath, "watersheds_AllSpTot_tbl_water")
