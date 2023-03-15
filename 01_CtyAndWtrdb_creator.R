@@ -199,8 +199,8 @@ arcpy$CreateRelationshipClass_management(
   "NONE",
   "ONE_TO_MANY",
   "NONE",
-  "huc8",
-  "HUC8_CD"
+  "ADMIN_FIPS",
+  "FIPS_CD"
 )
 
 
