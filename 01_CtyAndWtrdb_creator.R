@@ -210,6 +210,14 @@ arcpy$management$AlterField(in_table=intable, field="count_G1G2", new_field_alia
 arcpy$management$AlterField(in_table=intable, field="count_ESA", new_field_alias="Count - ESA Species")
 arcpy$management$AlterField(in_table=intable, field="count_G1G2ESA", new_field_alias="Count - G1/G2 & ESA Species")
 
+arcpy$management$AlterField(in_table=jointable, field="GNAME", new_field_alias="Scientific Name")
+arcpy$management$AlterField(in_table=jointable, field="G_COMNAME", new_field_alias="Common Name")
+arcpy$management$AlterField(in_table=jointable, field="G_RANK", new_field_alias="G-Rank")
+arcpy$management$AlterField(in_table=jointable, field="ROUNDED_G_RANK", new_field_alias="Rounded G-Rank")
+arcpy$management$AlterField(in_table=jointable, field="MAX_OBS_YEAR", new_field_alias="Most Recent Obs Year")
+arcpy$management$AlterField(in_table=jointable, field="FIPS_CD", new_field_alias="FIPS Code")
+arcpy$management$AlterField(in_table=jointable, field="COUNTY_NAME", new_field_alias="County Name")
+arcpy$management$AlterField(in_table=jointable, field="NSX_LINK", new_field_alias="NS Explorer")
 
 ########################################
 # watersheds # note, need to document the source of the county dataset as USGS, last downloaded data, etc
@@ -252,6 +260,15 @@ arcpy$management$AlterField(in_table=intable, field="count_allsp", new_field_ali
 arcpy$management$AlterField(in_table=intable, field="count_G1G2", new_field_alias="Count - G1/G2 Species")
 arcpy$management$AlterField(in_table=intable, field="count_ESA", new_field_alias="Count - ESA Species")
 arcpy$management$AlterField(in_table=intable, field="count_G1G2ESA", new_field_alias="Count - G1/G2 & ESA Species")
+
+arcpy$management$AlterField(in_table=jointable, field="GNAME", new_field_alias="Scientific Name")
+arcpy$management$AlterField(in_table=jointable, field="G_COMNAME", new_field_alias="Common Name")
+arcpy$management$AlterField(in_table=jointable, field="G_RANK", new_field_alias="G-Rank")
+arcpy$management$AlterField(in_table=jointable, field="ROUNDED_G_RANK", new_field_alias="Rounded G-Rank")
+arcpy$management$AlterField(in_table=jointable, field="MAX_OBS_YEAR", new_field_alias="Most Recent Obs Year")
+arcpy$management$AlterField(in_table=jointable, field="HUC8_CD", new_field_alias="HUC08")
+arcpy$management$AlterField(in_table=jointable, field="HUC8_NAME", new_field_alias="Watershed Name")
+arcpy$management$AlterField(in_table=jointable, field="NSX_LINK", new_field_alias="NS Explorer")
 
 ####################################################
 # Create Derivative Products (e.g. ESA map for storymap)
