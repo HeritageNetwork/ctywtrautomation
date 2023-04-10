@@ -270,6 +270,9 @@ arcpy$management$AlterField(in_table=jointable, field="HUC8_CD", new_field_alias
 arcpy$management$AlterField(in_table=jointable, field="HUC8_NAME", new_field_alias="Watershed Name")
 arcpy$management$AlterField(in_table=jointable, field="NSX_LINK", new_field_alias="NS Explorer")
 
+# clean up
+rm(intable, jointable, rclass)
+
 ####################################################
 # Create Derivative Products (e.g. ESA map for storymap)
 
