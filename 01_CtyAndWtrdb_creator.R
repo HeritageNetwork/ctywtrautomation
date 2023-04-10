@@ -276,6 +276,39 @@ rm(intable, jointable, rclass)
 ####################################################
 # Create Derivative Products (e.g. ESA map for storymap)
 
+# ESA storymap layer
+tbl_county_sums_ESA <- tbl_county  %>%
+  group_by(FIPS_CD)  %>%
+  dplyr::summarize(
+    count_Endangered = length(GNAME[LE_IND=='Y']),
+    count_Threatened = length(GNAME[LT_IND=='Y']),
+    count_TandE = length(GNAME[LE_IND=='Y']) + length(GNAME[LT_IND=='Y']),
+  )
+tbl_county_sums_ESA$sym_count_ESA <- cut(tbl_county_sums_ESA$count_TandE, 
+                                         breaks = c(0, .9, 2, 5, 10, 15, max(tbl_county_sums_ESA$count_TandE)), 
+                                         labels=c("0", "1-2", "3-5", "6-10", "11-15",paste0("16-",max(tbl_county_sums_ESA$count_TandE))), include.lowest=TRUE) 
+
+counties_sf <- arc.open(counties)
+counties_sf <- arc.select(counties_sf, fields=c("ADMIN_NAME","ADMIN_FIPS","STATE","STATE_FIPS","NAME","SQ_MILES","SUFFIX"), where_clause="STATE NOT IN ('VI', 'PR') AND POP<>-999")
+counties_sf <- arc.data2sf(counties_sf)
+setdiff(tbl_county_sums_ESA$FIPS_CD, counties_sf$ADMIN_FIPS)
+setdiff(counties_sf$ADMIN_FIPS, tbl_county_sums_ESA$FIPS_CD)
+counties_ESA_sf <- merge(counties_sf, tbl_county_sums_ESA, by.x="ADMIN_FIPS", by.y="FIPS_CD", all.x=TRUE)
+counties_ESA_sf <- counties_ESA_sf[c("ADMIN_FIPS","ADMIN_NAME","NAME","STATE","STATE_FIPS","SQ_MILES","count_Endangered","count_Threatened","count_TandE","sym_count_ESA","geometry")]
+
+counties_ESA_sf[c("count_Endangered", "count_Threatened", "count_TandE", "sym_count_ESA")][is.na(counties_ESA_sf[c("count_Endangered", "count_Threatened", "count_TandE", "sym_count_ESA")])] <- 0
+
+arc.delete(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_ESA"))
+arc.write(here::here("_data", "output", updateName, paste0(updateName,".gdb"), "counties_ESA"), counties_ESA_sf, validate=TRUE, overwrite=TRUE)
+
+ESAtable <- file.path(wkpath, "counties_ESA")
+# set the aliases to the watershed field names
+arcpy$management$AlterField(in_table=ESAtable, field="NAME", new_field_alias="County Name")
+arcpy$management$AlterField(in_table=ESAtable, field="STATE", new_field_alias="State")
+arcpy$management$AlterField(in_table=ESAtable, field="SQ_MILES", new_field_alias="Area (sqmi)")
+arcpy$management$AlterField(in_table=ESAtable, field="count_Endangered", new_field_alias="Count - ESA Endangered")
+arcpy$management$AlterField(in_table=ESAtable, field="count_Threatened", new_field_alias="Count - ESA Threatened")
+arcpy$management$AlterField(in_table=ESAtable, field="count_TandE", new_field_alias="Count - ESA Endangered or Threatened")
 
 ######################################
 # create metadata
