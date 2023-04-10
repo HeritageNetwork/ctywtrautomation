@@ -32,7 +32,7 @@ loadPython(python_path)
 arc.check_product()
 
 # update refresh name 
-updateName <- "_refresh202303"
+updateName <- "_refresh202303a"
 
 # path to old files 
 sourceCnty <- "S:/Projects/BLD_Standard_Products/County_Watershed_Data/_REFRESH_202203/Data/Source/Script_exports/widget_egt_county_export_202203_v4.txt"
